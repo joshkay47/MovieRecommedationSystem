@@ -73,7 +73,6 @@ def readMovies(movies_metadata_path, num_movies):
                 firstRow = False 
                 
 
-    print(movieGraph.nodes)       
     return movieGraph
             
 
@@ -90,8 +89,9 @@ def addGenreEdges(movieGraph, genres, all_genres, num_genres):
     count = 0
 
     for key in genres.keys():
+        key = str(key)
         if key in movie_list:
-            movieID = str(key)
+            movieID = key
             movieNode = movie_list[movieID]
             nodeInfo = {}
             nodeInfo["node_type"] = "movie"
@@ -106,6 +106,7 @@ def addGenreEdges(movieGraph, genres, all_genres, num_genres):
         if count == num_genres:
             break
             
+
     nx.set_node_attributes(movieGraph, nodeDict)
 
 
@@ -142,15 +143,16 @@ def addKeywordsEdges(movieGraph, keywords_dict, all_keywords, num_keywords):
     count = 0
 
     for key in keywords_dict.keys():
+        key = str(key)
         count +=1
         if key in movie_list:
-            movieID = str(key)
+            movieID = key
             movieNode = movie_list[movieID]
-            print(movieNode)
             nodeInfo = {}
             nodeInfo["node_type"] = "movie"
 
             nodeDict[movieNode] = nodeInfo
+            key = int(key)
             keywords_list = keywords_dict[key]
             for keyword in keywords_list:
                 movieGraph.add_edge(movieNode, keyword)
@@ -192,13 +194,15 @@ def addDirectorEdges(movieGraph, director_dict, all_directors, num_directors):
         nodeDict[director] = nodeInfo
         
     for key in director_dict.keys():
+        key = str(key)
         count +=1
         if key in movie_list:
-            movieID = str(key)
+            movieID = key
             movieNode = movie_list[movieID]
             nodeInfo = {}
             nodeInfo["node_type"] = "movie"
             nodeDict[movieNode] = nodeInfo
+            key = int(key)
             for director in director_dict[key]:
                 movieGraph.add_edge(movieNode, director)
 
@@ -221,7 +225,7 @@ director_dict, all_directors = readDirectors(credits_path, movieGraph)
 
 addDirectorEdges(movieGraph, director_dict, all_directors, 1000) 
 
-movieGraph = nx.read_graphml(saved_movie_path)
+
 
 
 movieList = list(movieGraph.nodes) 
@@ -349,7 +353,7 @@ def animate(frame):
    global start_movie
    fig.clear()
    nodes_visited, movie_subgraph = personalized_PageRank(movieGraph, start_movie, 1)
-   nx.draw(movie_subgraph, with_lables=True)
+   nx.draw(movie_subgraph, with_labels=True, font_size=8)
 
 nodes_visited, movie_subgraph = personalized_PageRank(movieGraph, start_movie, 1)
 nodes_visited = dict(sorted(nodes_visited.items(), key=lambda node: node[1], reverse=True))
